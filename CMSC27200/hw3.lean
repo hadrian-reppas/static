@@ -21,6 +21,8 @@ def greedy (n : Nat) : Change :=
 def optimal (c : Change) : Prop :=
   ∀ c' : Change, c.amount = c'.amount → c.count ≤ c'.count
 
+def valid (c : Change) (n : Nat) : Prop := optimal c ∧ c.amount = n
+
 @[simp]
 def Change.body : Change → Nat
   | ⟨_, n₅, n₂, n₁⟩ => 5 * n₅ + 2 * n₂ + n₁
@@ -122,7 +124,7 @@ lemma mul_div_10 (x y : Nat) : (10 * x + y) / 10 ≥ x := by
   apply h₂.mpr
   linarith
 
-lemma optimal_n₁₀_amount_div_10 {c : Change} (h₁ : optimal c)
+lemma optimal_n₁₀_n_div_10 {c : Change} (h₁ : optimal c)
     (h₂ : n = c.amount): c.n₁₀ = n / 10 := by
   match Nat.lt_trichotomy c.n₁₀ (n / 10) with
   | .inl h₃ =>
@@ -164,7 +166,7 @@ lemma optimal_n₁₀_amount_div_10 {c : Change} (h₁ : optimal c)
 
 lemma optimal_body_n_mod_10 {c : Change} (h₁ : optimal c)
     (h₂ : n = c.amount) : c.body = n % 10 := by
-  have h₃ := optimal_n₁₀_amount_div_10 h₁ h₂
+  have h₃ := optimal_n₁₀_n_div_10 h₁ h₂
   have h₄ := Nat.div_add_mod n 10
   rw [amount_n₁₀_body, h₃] at h₂
   have h₅ := Eq.trans h₄ h₂
@@ -269,7 +271,7 @@ theorem optimal_eq_greedy {c : Change} (h : optimal c) :
     c = greedy c.amount := by
   let n := c.amount
   have h₂ : n = c.amount := by rfl
-  have h₃ := optimal_n₁₀_amount_div_10 h h₂
+  have h₃ := optimal_n₁₀_n_div_10 h h₂
   have h₄ := optimal_n₅_n_mod_10_div_5 h h₂
   have h₅ := optimal_n₂_n_mod_10_mod_5_div_2 h h₂
   have h₆ := optimal_n₁_n_mod_10_mod_5_mod_2 h h₂
@@ -323,14 +325,14 @@ def recurse_optimal {n : Nat} {c : Change} (k : Nat) (_ : k = c.count)
     have h₇ : n = c'.amount := Eq.trans h₂ h₅
     recurse_optimal c'.count rfl h₇
 
-theorem exists_optimal (n : Nat) : ∃ c, c.amount = n ∧ optimal c := by
+lemma exists_optimal (n : Nat) : ∃ c, c.amount = n ∧ optimal c := by
   let c := greedy n
   have h₁ := greedy_amount n
   have h₂ : n = Change.amount c := by exact id h₁.symm
   have ⟨c', h₃, h₄⟩ := recurse_optimal c.count rfl h₂
   exact ⟨c', h₃.symm, h₄⟩
 
-theorem greedy_optimal (n : Nat) : optimal (greedy n) := by
+lemma greedy_optimal (n : Nat) : optimal (greedy n) := by
   intro c' h
   let ⟨c, h₁, h₂⟩ := exists_optimal n
   have h₃ := optimal_eq_greedy h₂
@@ -340,3 +342,5 @@ theorem greedy_optimal (n : Nat) : optimal (greedy n) := by
   rw [←h₃] at h
   assumption
 
+theorem greedy_valid (n : Nat) : valid (greedy n) n :=
+  ⟨greedy_optimal n, greedy_amount n⟩
