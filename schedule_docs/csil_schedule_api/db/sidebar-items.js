@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["MIGRATIONS"],"struct":["DbConnection","DbError"],"type":["Result"]};

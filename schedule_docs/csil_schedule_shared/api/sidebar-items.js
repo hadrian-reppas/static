@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["CoverInfo","CoverRequest","DeleteShiftInfo","NewShift","NewTutor","PatchTutor","ShiftDiff","ShiftQuery"]};

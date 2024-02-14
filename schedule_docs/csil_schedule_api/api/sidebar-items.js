@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["cover_shift","dedup_cleaning","delete_shift","get_intervals_that_need_cover","get_shift","get_shifts","get_shifts_json","get_tutor","get_tutors","insert_shift_merging_if_needed","min_tutors_on_shift_in_interval_ignoring_a_specific_tutor","new_shift","new_tutor","patch_cleaning","patch_tutor","request_cover"],"type":["SharedConnection"]};

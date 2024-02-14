@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["active","cnet","family_name","given_name","id","primary_color","secondary_color","star"]};
